@@ -18,6 +18,62 @@ import {
 // Active tab tracking state
 const tabDwellTracker = new Map(); // tabId -> { url, site, startTimestamp }
 
+let creatingOffscreenPromise = null;
+
+/**
+ * Ensures the offscreen document exists for image analysis.
+ */
+async function setupOffscreenDocument() {
+  if (await hasOffscreenDocument()) return;
+
+  if (creatingOffscreenPromise) {
+    await creatingOffscreenPromise;
+  } else {
+    creatingOffscreenPromise = chrome.offscreen.createDocument({
+      url: "src/offscreen/offscreen.html",
+      reasons: ["BLOBS", "LOCAL_STORAGE"],
+      justification: "Analyze tab screenshots using local vision heuristics"
+    });
+    await creatingOffscreenPromise;
+    creatingOffscreenPromise = null;
+  }
+}
+
+async function hasOffscreenDocument() {
+  const matchedClients = await clients.matchAll();
+  return matchedClients.some((c) => c.url.includes("offscreen.html"));
+}
+
+/**
+ * Captures the visible tab and asks the offscreen document to classify it.
+ */
+async function inspectTabVision(tabId, visionConfig) {
+  try {
+    await setupOffscreenDocument();
+    const dataUri = await chrome.tabs.captureVisibleTab(null, { format: "jpeg", quality: 40 });
+    
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage(
+        {
+          type: MESSAGE_TYPES.ANALYZE_IMAGE,
+          dataUri,
+          visionConfig
+        },
+        (response) => {
+          if (chrome.runtime.lastError || !response) {
+            resolve({ isProcrastination: true });
+          } else {
+            resolve(response);
+          }
+        }
+      );
+    });
+  } catch (err) {
+    // Tab capture may fail if window minimized or permission restricted
+    return { isProcrastination: true };
+  }
+}
+
 /**
  * Broadcasts a message to all tabs matching target sites or a specific tab.
  */
@@ -52,7 +108,16 @@ async function evaluateTab(tabId, url) {
   }
 
   const dwellSeconds = Math.floor((now - tracking.startTimestamp) / 1000);
-  const effectiveHostility = computeEffectiveHostility(config, dwellSeconds);
+  let effectiveHostility = computeEffectiveHostility(config, dwellSeconds);
+
+  // If vision analysis is enabled and tab is active, analyze frame
+  if (effectiveHostility > HOSTILITY_LEVELS.PASSIVE && config.vision?.enabled && dwellSeconds > 10) {
+    const visionVerdict = await inspectTabVision(tabId, config.vision);
+    if (!visionVerdict.isProcrastination) {
+      // Vision model determined this is productive (e.g. coding tutorial or documentation)
+      effectiveHostility = HOSTILITY_LEVELS.PASSIVE;
+    }
+  }
 
   if (effectiveHostility > HOSTILITY_LEVELS.PASSIVE) {
     // Send sabotage command to content script
