@@ -1,0 +1,21 @@
+{
+  "name": "anti-doomscroll",
+  "version": "1.0.0",
+  "description": "Hostile Productivity: An agentic browser extension that actively sabotages procrastination.",
+  "main": "src/background/service_worker.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "build:zip": "node scripts/build_zip.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "productivity",
+    "hostile-ui",
+    "webgpu",
+    "transformers-js",
+    "manifest-v3"
+  ],
+  "author": "Pranav Bhupathiraju",
+  "license": "MIT"
+}

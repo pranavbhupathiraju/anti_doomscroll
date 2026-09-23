@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AntiDoomscroll: Hostile Productivity</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="hostile-eye-glow">
+          <img src="../../assets/icons/icon48.png" alt="AntiDoomscroll Logo" class="brand-icon">
+        </div>
+        <div class="brand-text">
+          <h1>ANTIDOOMSCROLL</h1>
+          <span class="subtitle">HOSTILE PRODUCTIVITY AGENT</span>
+        </div>
+      </div>
+      <div id="statusBadge" class="status-badge active">
+        <span class="pulse-dot"></span>
+        <span id="statusText">ACTIVE</span>
+      </div>
+    </header>
+
+    <!-- Master Switch -->
+    <div class="card master-switch-card">
+      <div class="switch-content">
+        <span class="switch-label">Adversarial Defense</span>
+        <span class="switch-desc">Actively ruin doomscrolling tabs</span>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="masterToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Hostility Escalator -->
+    <div class="card">
+      <div class="card-header">
+        <label for="hostilitySlider">HOSTILITY LEVEL</label>
+        <span id="hostilityLabel" class="level-tag">Level 2: Elizabethan Curse</span>
+      </div>
+      <div class="slider-wrapper">
+        <input type="range" id="hostilitySlider" min="0" max="4" step="1" value="2">
+        <div class="slider-ticks">
+          <span>0</span>
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+        </div>
+      </div>
+      <p id="hostilityDescription" class="level-description">
+        Comments and post titles are dynamically translated into 16th-century Shakespearean laments and mock soliloquies.
+      </p>
+
+      <div class="checkbox-row">
+        <label class="checkbox-container">
+          <input type="checkbox" id="autoEscalateToggle" checked>
+          <span class="checkmark"></span>
+          <span class="checkbox-label">Auto-Escalate with Dwell Time</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Work Hours -->
+    <div class="card">
+      <div class="card-header">
+        <span>ACTIVE WORK SCHEDULE</span>
+        <span id="workHourStatus" class="schedule-status-indicator">ON DUTY</span>
+      </div>
+
+      <div class="time-inputs-row">
+        <div class="time-field">
+          <label for="startTime">START</label>
+          <input type="time" id="startTime" value="09:00">
+        </div>
+        <span class="time-separator">➔</span>
+        <div class="time-field">
+          <label for="endTime">END</label>
+          <input type="time" id="endTime" value="17:00">
+        </div>
+      </div>
+
+      <div class="days-selector" id="daysSelector">
+        <button type="button" class="day-btn" data-day="1">M</button>
+        <button type="button" class="day-btn" data-day="2">T</button>
+        <button type="button" class="day-btn" data-day="3">W</button>
+        <button type="button" class="day-btn" data-day="4">T</button>
+        <button type="button" class="day-btn" data-day="5">F</button>
+        <button type="button" class="day-btn weekend" data-day="6">S</button>
+        <button type="button" class="day-btn weekend" data-day="0">S</button>
+      </div>
+    </div>
+
+    <!-- Target Platforms -->
+    <div class="card">
+      <div class="card-header">
+        <span>TARGETED DISTRACTIONS</span>
+      </div>
+      <div class="targets-grid">
+        <label class="target-chip">
+          <input type="checkbox" id="targetYouTube" checked>
+          <span class="chip-content">
+            <span class="chip-dot youtube-dot"></span> YouTube
+          </span>
+        </label>
+        <label class="target-chip">
+          <input type="checkbox" id="targetReddit" checked>
+          <span class="chip-content">
+            <span class="chip-dot reddit-dot"></span> Reddit
+          </span>
+        </label>
+        <label class="target-chip">
+          <input type="checkbox" id="targetTwitter">
+          <span class="chip-content">
+            <span class="chip-dot twitter-dot"></span> X / Twitter
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Live Sabotage Metrics -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-number" id="statComments">0</span>
+        <span class="stat-title">Laments Injected</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number" id="statVideos">0</span>
+        <span class="stat-title">Videos Shrunk</span>
+      </div>
+      <div class="stat-box highlight">
+        <span class="stat-number" id="statTabsClosed">0</span>
+        <span class="stat-title">Tabs Rage-Closed</span>
+      </div>
+    </div>
+
+    <!-- Emergency Disarm -->
+    <footer class="app-footer">
+      <button id="graceBtn" class="btn-grace">
+        🏳️ Beg For Mercy (15m Grace Period)
+      </button>
+      <div id="graceNotice" class="grace-notice hidden">
+        Grace period active for <span id="graceCountdown">15:00</span>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

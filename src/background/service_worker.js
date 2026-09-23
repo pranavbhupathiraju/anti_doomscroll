@@ -1,0 +1,174 @@
+/**
+ * AntiDoomscroll Background Service Worker (Manifest V3)
+ * Monitors active tabs, enforces work-hour schedules, and coordinates sabotage.
+ */
+
+import {
+  DEFAULT_CONFIG,
+  HOSTILITY_LEVELS,
+  MESSAGE_TYPES
+} from "../common/constants.js";
+import { storage } from "../common/storage.js";
+import {
+  computeEffectiveHostility,
+  getMatchedDistractionSite,
+  isWithinWorkHours
+} from "./scheduler.js";
+
+// Active tab tracking state
+const tabDwellTracker = new Map(); // tabId -> { url, site, startTimestamp }
+
+/**
+ * Broadcasts a message to all tabs matching target sites or a specific tab.
+ */
+async function sendTabMessage(tabId, message) {
+  try {
+    await chrome.tabs.sendMessage(tabId, message);
+  } catch (err) {
+    // Content script might not be injected yet or tab closed
+  }
+}
+
+/**
+ * Evaluates the status of a specific tab and dispatches sabotage commands if needed.
+ */
+async function evaluateTab(tabId, url) {
+  if (!url) return;
+
+  const config = await storage.getConfig();
+  const matchedSite = getMatchedDistractionSite(url, config.targetSites);
+
+  if (!matchedSite) {
+    tabDwellTracker.delete(tabId);
+    return;
+  }
+
+  // Record or update dwell time
+  let tracking = tabDwellTracker.get(tabId);
+  const now = Date.now();
+  if (!tracking || tracking.site !== matchedSite) {
+    tracking = { url, site: matchedSite, startTimestamp: now };
+    tabDwellTracker.set(tabId, tracking);
+  }
+
+  const dwellSeconds = Math.floor((now - tracking.startTimestamp) / 1000);
+  const effectiveHostility = computeEffectiveHostility(config, dwellSeconds);
+
+  if (effectiveHostility > HOSTILITY_LEVELS.PASSIVE) {
+    // Send sabotage command to content script
+    sendTabMessage(tabId, {
+      type: MESSAGE_TYPES.TRIGGER_SABOTAGE,
+      hostilityLevel: effectiveHostility,
+      site: matchedSite,
+      dwellSeconds,
+      config
+    });
+
+    // Update extension badge to reflect hostility
+    chrome.action.setBadgeText({
+      tabId,
+      text: `L${effectiveHostility}`
+    });
+    chrome.action.setBadgeBackgroundColor({
+      tabId,
+      color: effectiveHostility >= HOSTILITY_LEVELS.DEGRADATION ? "#ff0033" : "#ff9900"
+    });
+  } else {
+    // In passive mode or outside work hours, restore normal DOM
+    sendTabMessage(tabId, {
+      type: MESSAGE_TYPES.RESTORE_DOM
+    });
+    chrome.action.setBadgeText({ tabId, text: "" });
+  }
+}
+
+/**
+ * Periodic tick alarm to re-evaluate active tabs and escalate sabotage
+ */
+chrome.alarms.create("anti_doomscroll_tick", { periodInMinutes: 0.1 }); // ~6 seconds
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name !== "anti_doomscroll_tick") return;
+
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs.length > 0 && tabs[0].id) {
+      await evaluateTab(tabs[0].id, tabs[0].url);
+    }
+  } catch (err) {
+    console.error("[AntiDoomscroll] Alarm tick error:", err);
+  }
+});
+
+// Tab navigation listeners
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete" && tab.url) {
+    evaluateTab(tabId, tab.url);
+  }
+});
+
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+  try {
+    const tab = await chrome.tabs.get(activeInfo.tabId);
+    if (tab && tab.url) {
+      await evaluateTab(activeInfo.tabId, tab.url);
+    }
+  } catch (err) {
+    // Tab might have closed
+  }
+});
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  // If a user closes a tab that was being sabotaged, increment victory stats!
+  if (tabDwellTracker.has(tabId)) {
+    storage.incrementStat("tabsClosedInDisgust", 1);
+    tabDwellTracker.delete(tabId);
+  }
+});
+
+// Runtime message listener for popup & content scripts
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  (async () => {
+    switch (message.type) {
+      case MESSAGE_TYPES.CHECK_STATUS: {
+        const config = await storage.getConfig();
+        const stats = await storage.getStats();
+        const isGrace = await storage.isGracePeriodActive();
+        const inWorkHours = isWithinWorkHours(config.workHours);
+        
+        sendResponse({
+          config,
+          stats,
+          isGrace,
+          inWorkHours,
+          activeTrackedTabs: tabDwellTracker.size
+        });
+        break;
+      }
+
+      case MESSAGE_TYPES.SETTINGS_CHANGED: {
+        // Re-evaluate all active tabs immediately
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        for (const tab of tabs) {
+          if (tab.id && tab.url) {
+            await evaluateTab(tab.id, tab.url);
+          }
+        }
+        sendResponse({ success: true });
+        break;
+      }
+
+      case MESSAGE_TYPES.PING: {
+        sendResponse({ pong: true });
+        break;
+      }
+
+      default:
+        sendResponse({ error: "Unknown message type" });
+    }
+  })();
+
+  return true; // Keep message channel open for async response
+});
+
+console.log("[AntiDoomscroll] Background Service Worker successfully initialized.");
