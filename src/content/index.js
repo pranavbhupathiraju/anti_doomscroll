@@ -8,6 +8,17 @@ import { shakespeareRewriter } from "./sabotage/shakespeare_nlp.js";
 import { videoShrinker } from "./sabotage/video_shrinker.js";
 import { chaosEngine } from "./sabotage/chaos_engine.js";
 import { nagOverlay } from "./sabotage/nag_overlay.js";
+import { YouTubeAdaptor } from "./adaptors/youtube.js";
+import { RedditAdaptor } from "./adaptors/reddit.js";
+
+// Select site adaptor
+let currentAdaptor = null;
+const host = window.location.hostname;
+if (host.includes("youtube.com") || host.includes("youtu.be")) {
+  currentAdaptor = new YouTubeAdaptor();
+} else if (host.includes("reddit.com")) {
+  currentAdaptor = new RedditAdaptor();
+}
 
 let currentHostility = HOSTILITY_LEVELS.PASSIVE;
 let mutationObserver = null;
@@ -35,6 +46,11 @@ function applySabotage(hostilityLevel, config) {
     const intervalSecs = config?.videoShrinkIntervalSeconds || 5;
     videoShrinker.start(intervalSecs);
     chaosEngine.corruptThumbnails();
+
+    // Check specific adaptors
+    if (currentAdaptor?.siteName === "youtube") {
+      currentAdaptor.sabotageShortsReel();
+    }
   }
 
   // Level 4: Completely Unhinged (Page tilt, button evasion, nag alerts)
@@ -42,6 +58,25 @@ function applySabotage(hostilityLevel, config) {
     chaosEngine.startOpticalTilt();
     chaosEngine.enableButtonEvasion();
     nagOverlay.showRandomNag();
+  }
+}
+
+// Hook SPA navigation
+if (currentAdaptor) {
+  currentAdaptor.onPageChange(() => {
+    if (currentHostility >= HOSTILITY_LEVELS.CONFUSION) {
+      setTimeout(() => {
+        applySabotage(currentHostility, null);
+      }, 500);
+    }
+  });
+
+  if (currentAdaptor.siteName === "reddit") {
+    window.addEventListener("scroll", () => {
+      if (currentHostility >= HOSTILITY_LEVELS.DEGRADATION) {
+        currentAdaptor.checkInfiniteScrollDoom();
+      }
+    }, { passive: true });
   }
 }
 
