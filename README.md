@@ -12,8 +12,6 @@ I built this for myself because I'm a chud and need to spend less time on YouTub
 
 Instead of blocking YouTube, Reddit, Twitter, or TikTok this extension **lets you stay on the page but ruins the experience from the inside out**.
 
-Powered by a lightweight, low-latency local vision & text model (running entirely on-device via WebGPU and optional local LLM sidecars), AntiDoomscroll watches your scrolling patterns and activates progressive DOM sabotage:
-
 ## TO - DO
 1. Add different modes like disappointed parent, drill sergeant etc.
 2. Mess with audio where applicable
