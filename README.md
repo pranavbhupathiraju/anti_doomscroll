@@ -1,4 +1,4 @@
-# 🤺 AntiDoomscroll: The "Hostile Productivity" Browser Extension
+# 🤺 AntiDoomscroll
 
 > *"Traditional site blockers ask you politely. AntiDoomscroll makes the distraction so deeply bizarre, confusing, and unrewarding that you close the tab out of sheer exasperation."*
 
@@ -8,12 +8,11 @@
 
 ---
 
-## ⚡ The Premise
+## ⚡ Why?
 
-Traditional website blockers fail because they rely on binary locks. When a dopamine-craving brain encounters a block screen, it simply enters the password, disables the extension in `chrome://extensions`, or bypasses the blocker in an incognito window.
+I built this for myself because I'm a chud and need to spend less time on YouTube, TikTok, Linkedin etc.
 
-**AntiDoomscroll** takes an adversarial psychological approach:
-Instead of blocking YouTube, Reddit, Twitter, or TikTok during your scheduled work hours, **it lets you stay on the page—but aggressively ruins the experience from the inside out**.
+Instead of blocking YouTube, Reddit, Twitter, or TikTok this extension **lets you stay on the page—but aggressively ruins the experience from the inside out**.
 
 Powered by a lightweight, low-latency local vision & text model (running entirely on-device via WebGPU and optional local LLM sidecars), AntiDoomscroll watches your scrolling patterns and activates progressive DOM sabotage:
 
@@ -100,42 +99,6 @@ Configure your punishment curve:
                             └──────────────────────────────┘
 ```
 
----
-
-## 🛠️ Project Roadmap & Subcomponents
-
-1. **Sprint 1: Specifications & Documentation** (Current)
-   - Manifest V3 architecture design
-   - Project specifications in `IMPLEMENTATION.md`
-   - Initial repository setup and GitHub sync
-
-2. **Sprint 2: Extension Core Skeleton**
-   - Manifest V3 declarations & permissions
-   - Cyberpunk Antagonistic Popup UI with work schedule controls
-   - Background service worker & alarm scheduler
-
-3. **Sprint 3: The Sabotage Engine**
-   - Video Shrinker module with smooth cubic-bezier transitions
-   - Real-time DOM text node walker & Shakespearean lexicon engine
-   - Thumbnail chaos swapper & optical drift CSS modules
-
-4. **Sprint 4: Vision & Activity Detection Pipeline**
-   - Offscreen Document setup for sandboxed WebGPU execution
-   - Transformers.js vision inference (MobileNet / CLIP / Florence-2)
-   - Screen capture bridge (`chrome.tabs.captureVisibleTab`)
-   - Local Ollama / SmolVLM sidecar fallback API
-
-5. **Sprint 5: Site Adaptors**
-   - Deep YouTube adaptor (Shorts blocker, feed scrambler, watch player shrinker)
-   - Deep Reddit adaptor (Infinite scroll disruptor, comment transformer)
-
-6. **Sprint 6: Polish, Options & Release**
-   - Hostility slider presets ("Gentle Nudge" to "Unhinged")
-   - Sound synthesis (subtle yawning & yawn frequencies)
-   - Build automation, package scripts, and test suite
-
----
-
 ## 🚀 Quickstart & Installation (Developer Mode)
 
 ### Prerequisites
@@ -167,4 +130,4 @@ npm run build
 ## ⚖️ License & Ethics
 
 Released under the [MIT License](LICENSE).
-Built purely for personal productivity, laugh-out-loud entertainment, and exploring local in-browser machine learning and Chrome Manifest V3 APIs.
+Built purely for personal productivity and giggles use at your own discretion
