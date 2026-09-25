@@ -46,7 +46,8 @@ export const DEFAULT_CONFIG = {
   targetSites: {
     youtube: true,
     reddit: true,
-    twitter: false
+    twitter: false,
+    linkedin: true
   },
   sabotageFeatures: {
     videoShrink: true,

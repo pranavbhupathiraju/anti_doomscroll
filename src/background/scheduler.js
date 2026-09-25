@@ -55,6 +55,9 @@ export function getMatchedDistractionSite(url, targetSites = {}) {
     if (targetSites.twitter && (host.includes("twitter.com") || host.includes("x.com"))) {
       return "twitter";
     }
+    if (targetSites.linkedin && host.includes("linkedin.com")) {
+      return "linkedin";
+    }
   } catch {
     return null;
   }

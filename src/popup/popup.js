@@ -34,6 +34,7 @@ const workHourStatus = document.getElementById("workHourStatus");
 const targetYouTube = document.getElementById("targetYouTube");
 const targetReddit = document.getElementById("targetReddit");
 const targetTwitter = document.getElementById("targetTwitter");
+const targetLinkedIn = document.getElementById("targetLinkedIn");
 const statComments = document.getElementById("statComments");
 const statVideos = document.getElementById("statVideos");
 const statTabsClosed = document.getElementById("statTabsClosed");
@@ -137,6 +138,7 @@ async function loadState() {
   targetYouTube.checked = !!currentConfig.targetSites.youtube;
   targetReddit.checked = !!currentConfig.targetSites.reddit;
   targetTwitter.checked = !!currentConfig.targetSites.twitter;
+  targetLinkedIn.checked = !!currentConfig.targetSites.linkedin;
 
   // Day buttons
   const activeDays = currentConfig.workHours.days || [];
@@ -177,7 +179,8 @@ async function saveChanges() {
     targetSites: {
       youtube: targetYouTube.checked,
       reddit: targetReddit.checked,
-      twitter: targetTwitter.checked
+      twitter: targetTwitter.checked,
+      linkedin: targetLinkedIn.checked
     }
   };
 
@@ -209,6 +212,7 @@ endTimeInput.addEventListener("change", saveChanges);
 targetYouTube.addEventListener("change", saveChanges);
 targetReddit.addEventListener("change", saveChanges);
 targetTwitter.addEventListener("change", saveChanges);
+targetLinkedIn.addEventListener("change", saveChanges);
 
 daysContainer.addEventListener("click", (e) => {
   const btn = e.target.closest(".day-btn");

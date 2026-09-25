@@ -66,7 +66,45 @@ export const SLANG_TRANSLATIONS = {
   "views": "gazing multitudes",
   "post": "affixed broadside",
   "upvote": "raise thy standard",
-  "downvote": "cast into outer darkness"
+  "downvote": "cast into outer darkness",
+
+  // Corporate & LinkedIn Cringe Translations
+  "excited to announce": "overcome with boastful vanity to proclaim",
+  "thrilled to announce": "afflicted with desperate pride to declare",
+  "humbled to share": "feigning modesty whilst swollen with conceit to reveal",
+  "humbled and honored": "bursting with unseemly pride under false piety",
+  "i am humbled": "mine ego knoweth no bounds, yet I utter",
+  "reach out": "dispatch a weary runner",
+  "circle back": "renew this tedious torment",
+  "touch base": "whisper in pointless assembly",
+  "deep dive": "plunge into murky obfuscation",
+  "thought leader": "herald of empty babble",
+  "thought leadership": "high-sounding declarations of the obvious",
+  "new position": "new servitude under a harsher overseer",
+  "new role": "fresh yoke upon my bruised neck",
+  "starting a new": "embarking upon fresh drudgery as a",
+  "networking": "beseeching favours among sycophants",
+  "network": "cabal of flatterers",
+  "connect": "pledge mutual servitude",
+  "connection": "fellow toiler in the corporate galleys",
+  "synergy": "unholy collusion of coin-counters",
+  "bandwidth": "mortal stamina for drudgery",
+  "leverage": "exploit for earthly gain",
+  "actionable": "tedious to perform",
+  "takeaways": "crumbs of dubious wisdom",
+  "congratulations": "I offer hollow acclamations",
+  "congrats": "mock homage unto thee",
+  "promotion": "elevation among the chained galley-slaves",
+  "resume": "scroll of embellished triumphs",
+  "job": "toil for copper pennies",
+  "career": "lifelong march unto the grave",
+  "founder": "maker of pitch decks and zero profit",
+  "co-founder": "accomplice in promissory debt",
+  "ceo": "arch-overseer of the cubicle plantation",
+  "recruiter": "press-gang captain scouring for flesh",
+  "growth hacker": "peddler of digital trickery",
+  "b2b": "merchant unto merchant",
+  "saas": "tithes for ethereal vaporware"
 };
 
 export const ARCHAIC_GRAMMAR_RULES = [
@@ -176,3 +214,26 @@ export function scrambleTitle(title) {
   const hash = title.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return antiClimaxes[hash % antiClimaxes.length];
 }
+
+/**
+ * Scrambles pretentious LinkedIn headlines into hilarious medieval titles.
+ * @param {string} headline
+ * @returns {string}
+ */
+export function scrambleCorporateHeadline(headline) {
+  if (!headline || headline.trim().length === 0) return headline;
+
+  const mockHeadlines = [
+    "Grand Vizier of Pitch Decks & Slide-Transitions",
+    "Chief Purveyor of Pointless Meetings | Ex-Unemployed",
+    "Professional Buzzword Conjuror | Top 1% Air-Breather",
+    "Synergy Evangelist | Passionate About Coffee & Calendars",
+    "Overseer of Tedious Spreadsheets | Humblebrag Artisan",
+    "Keynote Speaker to Unwilling Audiences | Self-Proclaimed Visionary",
+    "Disruptor of Naptime | Certified Email Forwarder"
+  ];
+
+  const hash = headline.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return mockHeadlines[hash % mockHeadlines.length];
+}
+

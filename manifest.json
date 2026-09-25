@@ -28,7 +28,8 @@
     "*://*.youtube.com/*",
     "*://*.reddit.com/*",
     "*://*.twitter.com/*",
-    "*://*.x.com/*"
+    "*://*.x.com/*",
+    "*://*.linkedin.com/*"
   ],
   "background": {
     "service_worker": "src/background/service_worker.js",
@@ -38,7 +39,8 @@
     {
       "matches": [
         "*://*.youtube.com/*",
-        "*://*.reddit.com/*"
+        "*://*.reddit.com/*",
+        "*://*.linkedin.com/*"
       ],
       "js": ["src/content/index.js"],
       "run_at": "document_idle"
@@ -52,7 +54,8 @@
       ],
       "matches": [
         "*://*.youtube.com/*",
-        "*://*.reddit.com/*"
+        "*://*.reddit.com/*",
+        "*://*.linkedin.com/*"
       ]
     }
   ]

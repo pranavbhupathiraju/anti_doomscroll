@@ -32,11 +32,12 @@ test("isWithinWorkHours correctly evaluates standard work day and time", () => {
 });
 
 test("getMatchedDistractionSite detects targeted domains correctly", () => {
-  const targets = { youtube: true, reddit: true, twitter: false };
+  const targets = { youtube: true, reddit: true, twitter: false, linkedin: true };
 
   assert.equal(getMatchedDistractionSite("https://www.youtube.com/watch?v=123", targets), "youtube");
   assert.equal(getMatchedDistractionSite("https://youtu.be/123", targets), "youtube");
   assert.equal(getMatchedDistractionSite("https://www.reddit.com/r/all", targets), "reddit");
+  assert.equal(getMatchedDistractionSite("https://www.linkedin.com/feed/", targets), "linkedin");
   assert.equal(getMatchedDistractionSite("https://x.com/home", targets), null); // twitter disabled
   assert.equal(getMatchedDistractionSite("https://github.com", targets), null);
 });

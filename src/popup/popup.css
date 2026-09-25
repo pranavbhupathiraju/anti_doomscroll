@@ -463,12 +463,12 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* Targets Grid */
 .targets-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 
 .target-chip {
-  flex: 1;
   cursor: pointer;
 }
 
@@ -501,6 +501,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .youtube-dot { background: #ff0000; }
 .reddit-dot { background: #ff4500; }
 .twitter-dot { background: #1d9bf0; }
+.linkedin-dot { background: #0a66c2; }
 
 .target-chip input:checked + .chip-content {
   border-color: rgba(255, 255, 255, 0.25);

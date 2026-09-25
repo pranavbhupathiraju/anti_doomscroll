@@ -10,6 +10,7 @@ import { chaosEngine } from "./sabotage/chaos_engine.js";
 import { nagOverlay } from "./sabotage/nag_overlay.js";
 import { YouTubeAdaptor } from "./adaptors/youtube.js";
 import { RedditAdaptor } from "./adaptors/reddit.js";
+import { LinkedInAdaptor } from "./adaptors/linkedin.js";
 
 // Select site adaptor
 let currentAdaptor = null;
@@ -18,6 +19,8 @@ if (host.includes("youtube.com") || host.includes("youtu.be")) {
   currentAdaptor = new YouTubeAdaptor();
 } else if (host.includes("reddit.com")) {
   currentAdaptor = new RedditAdaptor();
+} else if (host.includes("linkedin.com")) {
+  currentAdaptor = new LinkedInAdaptor();
 }
 
 let currentHostility = HOSTILITY_LEVELS.PASSIVE;
@@ -30,14 +33,20 @@ let debounceTimer = null;
 function applySabotage(hostilityLevel, config) {
   currentHostility = hostilityLevel;
 
-  // Level 1: Mild Confusion (Scramble clickbait titles)
+  // Level 1: Mild Confusion (Scramble clickbait titles / corporate headlines)
   if (hostilityLevel >= HOSTILITY_LEVELS.CONFUSION) {
     shakespeareRewriter.rewriteContainer(document.body, false);
+    if (currentAdaptor?.siteName === "linkedin") {
+      currentAdaptor.sabotageHeadlines();
+    }
   }
 
   // Level 2: The Elizabethan Curse (Rewrite comments into Shakespeare)
   if (hostilityLevel >= HOSTILITY_LEVELS.ELIZABETHAN) {
     shakespeareRewriter.rewriteContainer(document.body, false);
+    if (currentAdaptor?.siteName === "linkedin") {
+      currentAdaptor.sabotageHeadlines();
+    }
     startMutationWatcher();
   }
 
@@ -71,7 +80,7 @@ if (currentAdaptor) {
     }
   });
 
-  if (currentAdaptor.siteName === "reddit") {
+  if (currentAdaptor.siteName === "reddit" || currentAdaptor.siteName === "linkedin") {
     window.addEventListener("scroll", () => {
       if (currentHostility >= HOSTILITY_LEVELS.DEGRADATION) {
         currentAdaptor.checkInfiniteScrollDoom();
