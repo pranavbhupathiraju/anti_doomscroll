@@ -1,7 +1,5 @@
 # AntiDoomscroll
 
-> *"Regular site blockers dont work. This one beats you into submission"*
-
 [![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-blueviolet?style=for-the-badge&logo=googlechrome)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![Local ML](https://img.shields.io/badge/Local%20ML-WebGPU%20%2B%20Transformers.js-orange?style=for-the-badge&logo=huggingface)](https://huggingface.co/docs/transformers.js)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](LICENSE)
