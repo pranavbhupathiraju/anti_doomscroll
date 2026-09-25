@@ -78,8 +78,8 @@ export function computeEffectiveHostility(config, dwellSeconds = 0) {
     return HOSTILITY_LEVELS.PASSIVE;
   }
 
-  // Check work hours
-  if (!isWithinWorkHours(config.workHours)) {
+  // Check work hours (unless Force Hostile is enabled)
+  if (!config.forceHostile && !isWithinWorkHours(config.workHours)) {
     return HOSTILITY_LEVELS.PASSIVE;
   }
 

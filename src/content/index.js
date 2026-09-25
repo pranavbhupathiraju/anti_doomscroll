@@ -28,10 +28,46 @@ let mutationObserver = null;
 let debounceTimer = null;
 
 /**
+ * Displays a sleek temporary HUD indicator when sabotage activates.
+ */
+function showActivationHUD(level) {
+  if (document.getElementById("anti-doomscroll-hud")) return;
+  const hud = document.createElement("div");
+  hud.id = "anti-doomscroll-hud";
+  hud.className = "anti-doomscroll-ui";
+  hud.innerHTML = `⚔️ <span style="color:#ff2d55;font-weight:bold;">ANTIDOOMSCROLL</span>: Level ${level} Active`;
+  Object.assign(hud.style, {
+    position: "fixed",
+    top: "16px",
+    right: "16px",
+    zIndex: "2147483647",
+    background: "#0c0f1c",
+    color: "#00f0ff",
+    border: "1px solid #ff2d55",
+    borderRadius: "8px",
+    padding: "8px 14px",
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', monospace",
+    fontSize: "12px",
+    boxShadow: "0 4px 20px rgba(0,0,0,0.8), 0 0 15px rgba(255, 45, 85, 0.4)",
+    pointerEvents: "none",
+    transition: "opacity 0.6s ease, transform 0.6s ease",
+    opacity: "1",
+    transform: "translateY(0)"
+  });
+  document.body.appendChild(hud);
+  setTimeout(() => {
+    hud.style.opacity = "0";
+    hud.style.transform = "translateY(-15px)";
+    setTimeout(() => hud.remove(), 600);
+  }, 3500);
+}
+
+/**
  * Executes DOM transformations according to the current hostility level.
  */
 function applySabotage(hostilityLevel, config) {
   currentHostility = hostilityLevel;
+  showActivationHUD(hostilityLevel);
 
   // Level 1: Mild Confusion (Scramble clickbait titles / corporate headlines)
   if (hostilityLevel >= HOSTILITY_LEVELS.CONFUSION) {
@@ -163,3 +199,15 @@ if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.onMessage)
 }
 
 console.log("[AntiDoomscroll] Sabotage agent armed and awaiting orders.");
+
+// Request immediate check from background worker on load
+if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.sendMessage) {
+  try {
+    chrome.runtime.sendMessage({
+      type: "TAB_READY",
+      url: window.location.href
+    });
+  } catch (err) {
+    // Context may be invalidated if extension reloaded
+  }
+}

@@ -191,10 +191,51 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   }
 });
 
+// Extension install/reload listener: automatically inject into already opened matching tabs
+chrome.runtime.onInstalled.addListener(async () => {
+  console.log("[AntiDoomscroll] Extension installed/reloaded. Auto-injecting into existing tabs...");
+  try {
+    const tabs = await chrome.tabs.query({
+      url: [
+        "*://*.youtube.com/*",
+        "*://*.reddit.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.twitter.com/*",
+        "*://*.x.com/*"
+      ]
+    });
+    for (const tab of tabs) {
+      if (tab.id && tab.url) {
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ["src/content/content_bundle.js"]
+          });
+          evaluateTab(tab.id, tab.url);
+        } catch (e) {
+          // Silently ignore restricted tabs
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("[AntiDoomscroll] Auto-injection warning:", err);
+  }
+});
+
 // Runtime message listener for popup & content scripts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
     switch (message.type) {
+      case "TAB_READY": {
+        const tabId = sender.tab?.id;
+        const tabUrl = message.url || sender.tab?.url;
+        if (tabId && tabUrl) {
+          await evaluateTab(tabId, tabUrl);
+        }
+        sendResponse({ ack: true });
+        break;
+      }
+
       case MESSAGE_TYPES.CHECK_STATUS: {
         const config = await storage.getConfig();
         const stats = await storage.getStats();

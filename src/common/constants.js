@@ -36,6 +36,7 @@ export const STORAGE_KEYS = {
 
 export const DEFAULT_CONFIG = {
   enabled: true,
+  forceHostile: false, // Bypass work-hours schedule for immediate testing
   hostilityLevel: HOSTILITY_LEVELS.ELIZABETHAN,
   autoEscalate: true, // escalates hostility if browsing persists
   workHours: {

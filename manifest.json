@@ -22,7 +22,8 @@
     "alarms",
     "offscreen",
     "activeTab",
-    "tabs"
+    "tabs",
+    "scripting"
   ],
   "host_permissions": [
     "*://*.youtube.com/*",
@@ -42,7 +43,7 @@
         "*://*.reddit.com/*",
         "*://*.linkedin.com/*"
       ],
-      "js": ["src/content/index.js"],
+      "js": ["src/content/content_bundle.js"],
       "run_at": "document_idle"
     }
   ],

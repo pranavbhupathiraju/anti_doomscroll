@@ -5,8 +5,9 @@
   "main": "src/background/service_worker.js",
   "type": "module",
   "scripts": {
+    "build": "npx esbuild src/content/index.js --bundle --outfile=src/content/content_bundle.js --format=iife",
     "test": "node --test tests/*.test.js",
-    "build:zip": "node scripts/build_zip.js"
+    "build:zip": "npm run build && node scripts/build_zip.js"
   },
   "keywords": [
     "chrome-extension",

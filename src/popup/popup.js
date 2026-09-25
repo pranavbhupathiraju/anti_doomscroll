@@ -21,6 +21,7 @@ const DESCRIPTIONS = {
 
 // DOM Elements
 const masterToggle = document.getElementById("masterToggle");
+const forceHostileToggle = document.getElementById("forceHostileToggle");
 const statusBadge = document.getElementById("statusBadge");
 const statusText = document.getElementById("statusText");
 const hostilitySlider = document.getElementById("hostilitySlider");
@@ -130,6 +131,7 @@ async function loadState() {
 
   // Populate UI
   masterToggle.checked = currentConfig.enabled;
+  forceHostileToggle.checked = !!currentConfig.forceHostile;
   hostilitySlider.value = currentConfig.hostilityLevel;
   autoEscalateToggle.checked = currentConfig.autoEscalate;
   startTimeInput.value = currentConfig.workHours.start;
@@ -169,6 +171,7 @@ async function saveChanges() {
 
   const updates = {
     enabled: masterToggle.checked,
+    forceHostile: forceHostileToggle.checked,
     hostilityLevel: parseInt(hostilitySlider.value, 10),
     autoEscalate: autoEscalateToggle.checked,
     workHours: {
@@ -198,6 +201,7 @@ async function saveChanges() {
 
 // Event Listeners
 masterToggle.addEventListener("change", saveChanges);
+forceHostileToggle.addEventListener("change", saveChanges);
 
 hostilitySlider.addEventListener("input", (e) => {
   const val = parseInt(e.target.value, 10);
