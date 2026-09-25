@@ -14,6 +14,11 @@ Instead of blocking YouTube, Reddit, Twitter, or TikTok this extension **lets yo
 
 Powered by a lightweight, low-latency local vision & text model (running entirely on-device via WebGPU and optional local LLM sidecars), AntiDoomscroll watches your scrolling patterns and activates progressive DOM sabotage:
 
+## TO - DO
+1. Add different modes like disappointed parent, drill sergeant etc.
+2. Mess with audio where applicable
+3. Implement tracking features to show usefulness of extension or just results of the extension
+
 ```
 [Visit YouTube during work hours]
           │
