@@ -10,7 +10,7 @@
 
 I built this for myself because I'm a chud and need to spend less time on YouTube, TikTok, Linkedin etc.
 
-Instead of blocking YouTube, Reddit, Twitter, or TikTok this extension **lets you stay on the page—but aggressively ruins the experience from the inside out**.
+Instead of blocking YouTube, Reddit, Twitter, or TikTok this extension **lets you stay on the page but ruins the experience from the inside out**.
 
 Powered by a lightweight, low-latency local vision & text model (running entirely on-device via WebGPU and optional local LLM sidecars), AntiDoomscroll watches your scrolling patterns and activates progressive DOM sabotage:
 
